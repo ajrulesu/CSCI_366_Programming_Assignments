@@ -22,6 +22,21 @@ Client::~Client() {
 
 
 void Client::initialize(unsigned int player, unsigned int board_size){
+//    fstream fs;
+    string num = to_string(player);
+    string player_file = "player_";
+    player_file.append(num);
+    player_file.append(".shot.json");
+//    cout << player_file;
+    ofstream board;
+    board.open(player_file);
+    for(int i=0; i<board_size; i++) {
+        for (int j = 0; j < board_size; j++) {
+            board << "_";
+        }
+        board << endl;
+    }
+    board.close();
 }
 
 
