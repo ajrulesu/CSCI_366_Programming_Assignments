@@ -36,14 +36,19 @@ void Server::initialize(unsigned int board_size,
                         string p1_setup_board,
                         string p2_setup_board){
 
+    //open files as filestream
     ifstream p1;
     p1.open (p1_setup_board, ifstream::in);
     ifstream p2;
     p2.open(p2_setup_board, ifstream::in);
+
+    //get length of files
     unsigned int p1size= get_file_length(&p1);
     unsigned int p2size = get_file_length(&p2);
+
+    //compare to board size, accounting for newline chars
     int board_length = pow(board_size, 2) + board_size-1;
-//    cout << p1size << p2size << board_length;
+
     if(!(board_length==p1size && board_length==p2size)){
         throw __error();
     }

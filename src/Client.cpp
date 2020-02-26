@@ -22,25 +22,48 @@ Client::~Client() {
 
 
 void Client::initialize(unsigned int player, unsigned int board_size){
-//    fstream fs;
+    this->player = player;
     string num = to_string(player);
     string player_file = "player_";
     player_file.append(num);
-    player_file.append(".shot.json");
-//    cout << player_file;
-    ofstream board;
-    board.open(player_file);
-    for(int i=0; i<board_size; i++) {
-        for (int j = 0; j < board_size; j++) {
-            board << "_";
-        }
-        board << endl;
-    }
-    board.close();
+    player_file.append(".action_board.json");
+    ofstream actionboard;
+    actionboard.open(player_file);
+//    for(int i=0; i<board_size; i++) {
+//        for (int j = 0; j < board_size; j++) {
+//            actionboard << "_";
+//        }
+//        actionboard << endl;
+//    }
+    actionboard << "{\n"
+            "    \"board\": [\n"
+            "        [\n"
+            "            0,\n"
+            "            0\n"
+            "        ],\n"
+            "        [\n"
+            "            0,\n"
+            "            0\n"
+            "        ]\n"
+            "    ]\n"
+            "}";
+    actionboard.close();
+    this->initialized = true;
 }
 
 
 void Client::fire(unsigned int x, unsigned int y) {
+    string num = to_string(this->player);
+    string player_file = "player_";
+    player_file.append(num);
+    player_file.append(".shot.json");
+    ofstream shotboard;
+    shotboard.open(player_file);
+    shotboard << "{\n"
+                 "    \"x\": " << to_string(x) << ",\n"
+                 "    \"y\": "<< to_string(y) << "\n"
+                 "}";
+    shotboard.close();
 }
 
 
