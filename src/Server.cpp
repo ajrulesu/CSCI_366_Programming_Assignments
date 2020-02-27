@@ -50,17 +50,27 @@ void Server::initialize(unsigned int board_size,
     int board_length = pow(board_size, 2) + board_size-1;
 
     if(!(board_length==p1size && board_length==p2size)){
-        throw __error();
+        throw ServerException("Invalid Boards!");
     }
+    this->board_size = board_size;
 
 }
 
 
 int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
+    if(player < 1 || player > MAX_PLAYERS){
+        throw ServerException("Invalid Player Number");
+    }
+    if(x > BOARD_SIZE || y > BOARD_SIZE){
+        throw ServerException("Invalid coordinates");
+    }
 
 }
 
 
 int Server::process_shot(unsigned int player) {
+   if(player < 1 || player > MAX_PLAYERS){
+       throw ServerException("Invalid Player Number");
+   }
    return NO_SHOT_FILE;
 }
