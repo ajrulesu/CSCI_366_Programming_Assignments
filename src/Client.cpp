@@ -20,21 +20,32 @@
 Client::~Client() {
 }
 
+//template<class Archive>
+//void Client::serialize(Archive & archive)
+//{
+//    archive( x, y, z ); // serialize things by passing them to the archive
+//}
 
 void Client::initialize(unsigned int player, unsigned int board_size){
     this->player = player;
-    string num = to_string(player);
-    string player_file = "player_";
-    player_file.append(num);
-    player_file.append(".action_board.json");
+
+    string player_file = get_file_name("action_board");
+
     ofstream actionboard;
     actionboard.open(player_file);
-//    for(int i=0; i<board_size; i++) {
-//        for (int j = 0; j < board_size; j++) {
-//            actionboard << "_";
-//        }
-//        actionboard << endl;
-//    }
+//
+//    cereal::JSONOutputArchive outboard(actionboard);
+//
+//    int blankboard[board_size][board_size];
+//
+//    outboard()
+
+//
+//    ofstream actionboard;
+//    actionboard.open(player_file);
+    //two-d array of 0's update to 1's when shot
+
+
     actionboard << "{\n"
             "    \"board\": [\n"
             "        [\n"
@@ -53,10 +64,8 @@ void Client::initialize(unsigned int player, unsigned int board_size){
 
 
 void Client::fire(unsigned int x, unsigned int y) {
-    string num = to_string(this->player);
-    string player_file = "player_";
-    player_file.append(num);
-    player_file.append(".shot.json");
+    string player_file = get_file_name("shot");
+
     ofstream shotboard;
     shotboard.open(player_file);
     shotboard << "{\n"
@@ -81,4 +90,14 @@ void Client::update_action_board(int result, unsigned int x, unsigned int y) {
 
 
 string Client::render_action_board(){
+}
+
+string Client::get_file_name(string board){
+    string num = to_string(this->player);
+    string player_file = "player_";
+    player_file.append(num);
+    player_file.append(".");
+    player_file.append(board);
+    player_file.append(".json");
+    return player_file;
 }

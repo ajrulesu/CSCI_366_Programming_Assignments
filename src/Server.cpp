@@ -36,6 +36,8 @@ void Server::initialize(unsigned int board_size,
                         string p1_setup_board,
                         string p2_setup_board){
 
+    this->board_size= board_size;
+
     //open files as filestream
     ifstream p1;
     p1.open (p1_setup_board, ifstream::in);
@@ -52,7 +54,6 @@ void Server::initialize(unsigned int board_size,
     if(!(board_length==p1size && board_length==p2size)){
         throw ServerException("Invalid Boards!");
     }
-    this->board_size = board_size;
 
 }
 
@@ -61,8 +62,9 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     if(player < 1 || player > MAX_PLAYERS){
         throw ServerException("Invalid Player Number");
     }
+
     if(x > BOARD_SIZE || y > BOARD_SIZE){
-        throw ServerException("Invalid coordinates");
+        return OUT_OF_BOUNDS;
     }
 
 }
