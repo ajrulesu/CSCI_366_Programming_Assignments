@@ -20,45 +20,31 @@
 Client::~Client() {
 }
 
-//template<class Archive>
-//void Client::serialize(Archive & archive)
-//{
-//    archive( x, y, z ); // serialize things by passing them to the archive
-//}
+template<class Archive>
 
-void Client::initialize(unsigned int player, unsigned int board_size){
+void Client::serialize(Archive & archive)
+{
+    int x, y, z;
+    archive( x, y, z ); // serialize things by passing them to the archive
+}
+
+void Client::initialize(unsigned int player, unsigned int board_size) {
     this->player = player;
 
     string player_file = get_file_name("action_board");
 
     ofstream actionboard;
     actionboard.open(player_file);
-//
-//    cereal::JSONOutputArchive outboard(actionboard);
-//
-//    int blankboard[board_size][board_size];
-//
-//    outboard()
+    {
+        cereal::JSONOutputArchive outboard(actionboard);
 
-//
-//    ofstream actionboard;
-//    actionboard.open(player_file);
-    //two-d array of 0's update to 1's when shot
+        vector<int> line(BOARD_SIZE,0);
+        vector<vector<int>> blankboard(BOARD_SIZE, line);
+
+        outboard(cereal::make_nvp("board", blankboard));
+    }
 
 
-    actionboard << "{\n"
-            "    \"board\": [\n"
-            "        [\n"
-            "            0,\n"
-            "            0\n"
-            "        ],\n"
-            "        [\n"
-            "            0,\n"
-            "            0\n"
-            "        ]\n"
-            "    ]\n"
-            "}";
-    actionboard.close();
     this->initialized = true;
 }
 
