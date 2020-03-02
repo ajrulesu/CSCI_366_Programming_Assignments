@@ -54,11 +54,10 @@ void Client::fire(unsigned int x, unsigned int y) {
 
     ofstream shotboard;
     shotboard.open(player_file);
-    shotboard << "{\n"
-                 "    \"x\": " << to_string(x) << ",\n"
-                 "    \"y\": "<< to_string(y) << "\n"
-                 "}";
-    shotboard.close();
+
+    cereal::JSONOutputArchive outboard(shotboard);
+    outboard(CEREAL_NVP(x), CEREAL_NVP(y));
+
 }
 
 
