@@ -67,6 +67,26 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         return OUT_OF_BOUNDS;
     }
 
+    string player_file;
+    player_file = get_file_name("setup_board", player, ".txt");
+    ifstream setupboard;
+    setupboard.open(player_file);
+
+    int position;
+    position = (y*(BOARD_SIZE+1));
+    position += x;
+    setupboard.seekg(position);
+    char current = setupboard.get();
+
+
+    if(current == 'D' || current == 'C' || current == 'B' || current == 'S' || current == 'R'){
+        return HIT;
+    }
+
+    else
+        return MISS;
+
+
 }
 
 
@@ -75,4 +95,14 @@ int Server::process_shot(unsigned int player) {
        throw ServerException("Invalid Player Number");
    }
    return NO_SHOT_FILE;
+}
+
+string Server::get_file_name(string board, int player, string extension){
+    string player_file = "player_";
+    string player_number = to_string(player);
+    player_file.append(player_number);
+    player_file.append(".");
+    player_file.append(board);
+    player_file.append(extension);
+    return player_file;
 }

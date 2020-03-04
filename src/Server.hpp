@@ -98,4 +98,14 @@ public:
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
    int process_shot(unsigned int player);
+
+    //creates a file name based on which board you are creating
+    // @param board - board you want to create(ex. action_board)
+    // @param player - player number
+    // @parm extension - file extension
+    // @return string of player_#.board.extension
+
+    string get_file_name(string board, int player, string extension);
 };
+
+
