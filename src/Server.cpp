@@ -52,12 +52,18 @@ void Server::initialize(unsigned int board_size,
     unsigned int p2size = get_file_length(&p2);
 
     //compare to board size, accounting for newline chars
-    int board_length = pow(board_size, 2) + board_size-1;
+    int board_length = pow(board_size, 2) + board_size;
 
-    if(!(board_length==p1size && board_length==p2size)){
+    //test that length of board matches, whether or not there is a newline on last line
+    if((board_length==p1size && board_length==p2size)){
+        return;
+    }
+    else if(((board_length-1)==p1size && (board_length-1)==p2size)){
+        return;
+    }
+    else{
         throw ServerException("Invalid Boards!");
     }
-
 }
 
 
