@@ -112,7 +112,6 @@ public:
 
     string get_file_name(string board);
 
-    //void serialize(Archive &);
     template<class Archive>
     void serialize(Archive &archive);
 };

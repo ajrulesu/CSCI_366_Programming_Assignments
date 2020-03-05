@@ -63,21 +63,28 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         throw ServerException("Invalid Player Number");
     }
 
-    if(x > BOARD_SIZE || y > BOARD_SIZE){
+    if(x >= BOARD_SIZE || y >= BOARD_SIZE){
         return OUT_OF_BOUNDS;
     }
 
+
     string player_file;
-    player_file = get_file_name("setup_board", player, ".txt");
+    if(player == 1)
+        player_file = get_file_name("setup_board", 2, ".txt");
+    else
+        player_file = get_file_name("setup_board", 1, ".txt");
+
     ifstream setupboard;
     setupboard.open(player_file);
 
+    //convert x,y coordinates to position in txt file
     int position;
     position = (y*(BOARD_SIZE+1));
     position += x;
     setupboard.seekg(position);
     char current = setupboard.get();
 
+    setupboard.close();
 
     if(current == 'D' || current == 'C' || current == 'B' || current == 'S' || current == 'R'){
         return HIT;
@@ -86,7 +93,6 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     else
         return MISS;
 
-
 }
 
 
@@ -94,7 +100,33 @@ int Server::process_shot(unsigned int player) {
    if(player < 1 || player > MAX_PLAYERS){
        throw ServerException("Invalid Player Number");
    }
-   return NO_SHOT_FILE;
+
+    //open player_#.shot.json and handle if DNE
+   ifstream iShotStream;
+   string shotboard = get_file_name("shot", player, ".json");
+   iShotStream.open(shotboard);
+   if(!iShotStream.good()){
+       return NO_SHOT_FILE;
+   }
+
+    //read x,y from player_#.json
+   cereal::JSONInputArchive shot(iShotStream);
+   unsigned int x,y;
+   shot(x, y);
+
+    //call evaluate_shot and write result to player_#.result.json
+   ofstream oShotStream;
+   string resultboard = get_file_name("result", player, ".json");
+   oShotStream.open(resultboard);
+   cereal::JSONOutputArchive result(oShotStream);
+   int evaluate = evaluate_shot(player, x, y);
+   result(cereal::make_nvp("result", evaluate));
+
+    //remove player_#.shotboard.json
+   const char * rm = shotboard.c_str();
+   remove(rm);
+
+   return SHOT_FILE_PROCESSED;
 }
 
 string Server::get_file_name(string board, int player, string extension){
