@@ -31,18 +31,18 @@ void Client::serialize(Archive & archive)
 void Client::initialize(unsigned int player, unsigned int board_size) {
     this->player = player;
 
-    string player_file = get_file_name("action_board");
+    string actionboard = get_file_name("action_board");
 
-    ofstream actionboard;
-    actionboard.open(player_file);
-    {
-        cereal::JSONOutputArchive outboard(actionboard);
+    ofstream actionstream;
+    actionstream.open(actionboard);
 
-        vector<int> line(BOARD_SIZE,0);
-        vector<vector<int>> blankboard(BOARD_SIZE, line);
+    cereal::JSONOutputArchive outboard(actionstream);
 
-        outboard(cereal::make_nvp("board", blankboard));
-    }
+    vector<int> line(BOARD_SIZE,0);
+    vector<vector<int>> blankboard(BOARD_SIZE, line);
+
+    outboard(cereal::make_nvp("board", blankboard));
+
 
 
     this->initialized = true;
@@ -62,19 +62,94 @@ void Client::fire(unsigned int x, unsigned int y) {
 
 
 bool Client::result_available() {
+    string resultboard = get_file_name("result");
+    ifstream resultstream;
+    resultstream.open(resultboard);
+    if(resultstream.good())
+        return true;
+    else
+        return false;
 }
 
 
 int Client::get_result() {
+    //open result file
+    string resultboard = get_file_name("result");
+    ifstream resultstream;
+    resultstream.open(resultboard);
+    cereal::JSONInputArchive resultarchive(resultstream);
+    int result;
+
+    //receive result
+    resultarchive(result);
+
+    //handle bad results
+    if(result!= HIT && result!= MISS && result!= OUT_OF_BOUNDS)
+        throw ClientException("Bad Result!");
+
+    //remove player_#.result.json
+    const char * rm = resultboard.c_str();
+    remove(rm);
+
+    return result;
+
 }
 
 
 
 void Client::update_action_board(int result, unsigned int x, unsigned int y) {
+    //open player_#.action_board.json as input
+    string actionboard = get_file_name("action_board");
+    ofstream oActionstream;
+    ifstream iActionstream;
+    iActionstream.open(actionboard);
+    cereal::JSONInputArchive inboard(iActionstream);
+
+    //receive action_board as 2D vector
+    vector<vector<int>> board;
+    inboard(board);
+    iActionstream.close();
+
+    //place result at coordinates in action_board
+    vector<int> row = board.at(y);
+    row.at(x) = result;
+    board.at(y) = row;
+
+    //write 2D vector back to player_#.action_board.json
+    {
+        oActionstream.open(actionboard);
+        cereal::JSONOutputArchive outboard(oActionstream);
+        outboard(cereal::make_nvp("board", board));
+    }
+    oActionstream.close();
 }
 
 
 string Client::render_action_board(){
+    //open player_#.action_board.json as input
+    string actionboard = get_file_name("action_board");
+    ifstream iActionstream;
+    iActionstream.open(actionboard);
+    cereal::JSONInputArchive inboard(iActionstream);
+
+    //receive action_board as 2D vector
+    vector<vector<int>> board;
+    inboard(board);
+    iActionstream.close();
+
+    string result;
+
+    for(int i=0; i<board.size(); i++) {
+        vector<int> row = board.at(i);
+        for (int j = 0; j<row.size(); j++){
+            result.append(to_string(row.at(j)));
+            //cout<<row.at(j);
+        }
+        result.append("\n");
+        //cout<<"\n";
+    }
+
+    return result;
 }
 
 string Client::get_file_name(string board){

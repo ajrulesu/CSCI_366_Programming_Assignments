@@ -36,6 +36,9 @@ void Server::initialize(unsigned int board_size,
                         string p1_setup_board,
                         string p2_setup_board){
 
+    if(board_size!=BOARD_SIZE)
+        throw ServerException("Invalid board size!");
+
     this->board_size= board_size;
 
     //open files as filestream
@@ -67,7 +70,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         return OUT_OF_BOUNDS;
     }
 
-
+    //open opponent's setup board
     string player_file;
     if(player == 1)
         player_file = get_file_name("setup_board", 2, ".txt");

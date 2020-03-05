@@ -106,10 +106,11 @@ public:
     string render_action_board();
 
 
-    //creates a file name based on which board you are creating
-    // @param board - board you want to create(ex. action_board)
-    // @return string of player_#.board.json
-
+    /**
+     * creates a file name based on which board you are creating
+     * @param board - board you want to create(ex. action_board)
+     * @return string of player_#.board.json
+     */
     string get_file_name(string board);
 
     template<class Archive>
