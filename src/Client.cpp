@@ -143,10 +143,8 @@ string Client::render_action_board(){
         vector<int> row = board.at(i);
         for (int j = 0; j<row.size(); j++){
             result.append(to_string(row.at(j)));
-            //cout<<row.at(j);
         }
         result.append("\n");
-        //cout<<"\n";
     }
 
     return result;
