@@ -1,9 +1,9 @@
 
-        global  set_bit_elem
-        global  get_bit_elem
+        global  _set_bit_elem
+        global  _get_bit_elem
         section .text
 
-set_bit_elem:
+_set_bit_elem:
         push rbp            ; save the base pointer on the stack (at rsp+8)
         mov rbp, rsp        ; set up the rbp for the bottom of this frame
 
@@ -21,7 +21,7 @@ set_bit_elem:
 
 
 
-get_bit_elem:
+_get_bit_elem:
         push rbp            ; save the base pointer on the stack (at rsp+8)
         mov rbp, rsp        ; set up the rbp for the bottom of this frame
 

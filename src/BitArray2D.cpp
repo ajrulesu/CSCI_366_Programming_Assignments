@@ -16,8 +16,17 @@
 
 #include <math.h>
 #include "BitArray2D.hpp"
+#include "common.hpp"
 
 BitArray2D::BitArray2D(unsigned int rows, unsigned int columns) {
+    if(rows!=columns){
+        throw BitArray2DException("Invalid Array!");
+    }else if (rows<1){
+        throw BitArray2DException("Invalid Array!");
+    }else{
+        int size = rows*columns;
+        array = (char*) malloc(sizeof(char)*size);
+    }
 
 }
 
@@ -26,19 +35,22 @@ BitArray2D::~BitArray2D() {
 
 }
 
-
 bool BitArray2D::get(unsigned int row, unsigned int column){
    // check array bounds
-
+   if(row >= BOARD_SIZE || column >= BOARD_SIZE || row < 0 || column < 0){
+       throw BitArray2DException("Out of Bounds!");
+   }
    // get the element
-   return get_bit_elem(array, columns, row, column);
+    return get_bit_elem(array, columns, row, column);
 }
 
 
 
 void BitArray2D::set(unsigned int row, unsigned int column){
    // check array bounds
-
+   if(row >= BOARD_SIZE || column >= BOARD_SIZE || row < 0 || column < 0){
+       throw BitArray2DException("Out of Bounds!");
+   }
    // set the element
    set_bit_elem(array, columns, row, column);
 }
