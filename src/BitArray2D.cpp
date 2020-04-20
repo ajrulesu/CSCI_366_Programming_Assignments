@@ -24,8 +24,14 @@ BitArray2D::BitArray2D(unsigned int rows, unsigned int columns) {
     }else if (rows<1){
         throw BitArray2DException("Invalid Array!");
     }else{
-        int size = rows*columns;
-        array = (char*) malloc(sizeof(char)*size);
+        this->columns=columns;
+        this->rows = rows;
+        int remainder = rows*columns%8;
+        int size = rows*columns/8;
+        if(remainder!=0){
+            size+=1;
+        }
+        array = (char*) calloc(size, 1);
     }
 
 }
